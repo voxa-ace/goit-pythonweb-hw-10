@@ -1,16 +1,30 @@
-from fastapi import FastAPI, HTTPException, Depends
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from src.api.contacts import router as contact_router
 from src.api.birthdays import router as birthday_router
-from src.database.db import get_db
+from src.api.auth import router as auth_router
+from src.database.db import Base, engine
+
+# Create all tables
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Include routers for contacts and birthdays
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Update with specific origins for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(contact_router, prefix="/contacts", tags=["Contacts"])
 app.include_router(birthday_router, prefix="/birthdays", tags=["Birthdays"])
 
-# Add a root endpoint
+# Root endpoint
 @app.get("/")
 def read_root():
     return {
@@ -18,19 +32,3 @@ def read_root():
         "docs": "/docs",
         "redoc": "/redoc",
     }
-
-# Add a database health check endpoint
-@app.get("/db-check")
-def check_database_connection(db: Session = Depends(get_db)):
-    """
-    Endpoint to check database connection.
-    """
-    try:
-        # Execute a simple query to verify the database connection
-        result = db.execute("SELECT 1").fetchone()
-        if result:
-            return {"status": "success", "message": "Database connection is OK"}
-        else:
-            raise HTTPException(status_code=500, detail="Database connection test failed")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database connection error: {str(e)}")
