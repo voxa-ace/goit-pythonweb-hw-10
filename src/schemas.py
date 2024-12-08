@@ -1,40 +1,34 @@
+
 from pydantic import BaseModel, EmailStr
-from datetime import date
 from typing import Optional
 
-# Schemas for users
-class UserBase(BaseModel):
+class User(BaseModel):
+    id: int
     email: EmailStr
+    is_verified: bool
 
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    email: EmailStr
     password: str
 
-class UserResponse(UserBase):
+class UserResponse(BaseModel):
     id: int
-    is_active: bool
-    is_verified: bool
+    email: EmailStr
+    avatar: Optional[str]
 
     class Config:
         orm_mode = True
 
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-
-# Schemas for contacts
 class ContactBase(BaseModel):
-    first_name: str
-    last_name: str
-    email: EmailStr
+    name: str
     phone: str
-    birthday: date
-    additional_info: Optional[str] = None
 
 class ContactCreate(ContactBase):
     pass
 
 class ContactResponse(ContactBase):
     id: int
+    user_id: int
 
     class Config:
         orm_mode = True

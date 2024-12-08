@@ -9,13 +9,11 @@ engine = create_engine(settings.database_url)
 # Create a session for database interaction
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Base class for models
+# Base for defining models
 Base = declarative_base()
 
 def get_db():
-    """
-    Dependency to get the database session.
-    """
+    """Get a database session"""
     db = SessionLocal()
     try:
         yield db

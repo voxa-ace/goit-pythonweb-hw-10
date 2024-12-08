@@ -2,7 +2,10 @@ fastapi
 uvicorn
 sqlalchemy
 psycopg2-binary
-pydantic
 python-dotenv
 alembic
-fastapi-limiter
+python-jose
+cloudinary
+passlib
+bcrypt
+pydantic-settings
