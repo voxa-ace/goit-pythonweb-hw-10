@@ -1,27 +1,40 @@
-
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import date
 
-class User(BaseModel):
-    id: int
-    email: EmailStr
-    is_verified: bool
 
-class UserCreate(BaseModel):
-    email: EmailStr
+class UserLogin(BaseModel):
+    email: str
     password: str
 
-class UserResponse(BaseModel):
+# Схема користувача
+class User(BaseModel):
     id: int
-    email: EmailStr
-    avatar: Optional[str]
+    username: str
+    email: str
+    avatar: str
 
+
+# Схема для запиту реєстрації
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+
+# Схема для токену
+class Token(BaseModel):
+    access_token: str
+    token_type: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ContactBase(BaseModel):
-    name: str
-    phone: str
+    first_name: str
+    last_name: str
+    email: EmailStr
+    phone_number: str
+    birth_date: date
+    additional_info: Optional[str]
 
 class ContactCreate(ContactBase):
     pass
@@ -31,4 +44,4 @@ class ContactResponse(ContactBase):
     user_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -12,9 +12,8 @@ from src.repository.contact_repository import (
 def get_all_contacts(db: Session, skip: int, limit: int, user_id: int):
     return get_all_contacts_from_db(db, skip, limit, user_id)
 
-def create_new_contact(db: Session, contact_data, user_id: int):
-    contact_data.user_id = user_id
-    return create_contact_in_db(db, contact_data)
+async def create_new_contact(db: Session, contact_data, user_id: int):
+    return await create_contact_in_db(db, contact_data, user_id)
 
 def update_existing_contact(db: Session, contact_id: int, updated_data, user_id: int):
     contact = get_contact_by_id_and_user(db, contact_id, user_id)

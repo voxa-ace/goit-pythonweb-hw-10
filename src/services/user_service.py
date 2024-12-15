@@ -1,23 +1,29 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+from libgravatar import Gravatar
 
-from sqlalchemy.orm import Session
-from src.database.models import User
-from fastapi import HTTPException
+from src.repository.users import UserRepository
+from src.schemas import UserCreate
 
-def update_user_avatar(db: Session, user_id: int, avatar_url: str):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-    user.avatar = avatar_url
-    db.commit()
-    db.refresh(user)
-    return user
+class UserService:
+    def __init__(self, db: AsyncSession):
+        self.repository = UserRepository(db)
 
-def verify_email(db: Session, token: str):
-    # Example of email verification logic
-    user = db.query(User).filter(User.email_verification_token == token).first()
-    if not user or user.is_verified:
-        return False
-    user.is_verified = True
-    user.email_verification_token = None  # Clear the token
-    db.commit()
-    return True
+    async def create_user(self, body: UserCreate):
+        avatar = None
+        try:
+            g = Gravatar(body.email)
+            avatar = g.get_image()
+        except Exception as e:
+            print(e)
+
+        return await self.repository.create_user(body, avatar)
+
+    async def get_user_by_id(self, user_id: int):
+        return await self.repository.get_user_by_id(user_id)
+
+    async def get_user_by_username(self, username: str):
+        return await self.repository.get_user_by_username(username)
+
+    async def get_user_by_email(self, email: str):
+        return await self.repository.get_user_by_email(email)
+

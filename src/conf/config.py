@@ -13,4 +13,4 @@ class Settings(BaseSettings):
         env_file_encoding = "utf-8"
 
 settings = Settings()
-print("Settings initialized:", settings.dict())
+print(settings)
