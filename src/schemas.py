@@ -39,9 +39,17 @@ class ContactBase(BaseModel):
 class ContactCreate(ContactBase):
     pass
 
-class ContactResponse(ContactBase):
+class ContactResponse(BaseModel):
     id: int
-    user_id: int
 
     class Config:
         from_attributes = True
+
+class ContactFullResponse(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    email: str
+    phone_number: str
+    birth_date  : date
+    additional_info: str
