@@ -11,6 +11,19 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 # Реєстрація користувача
 @router.post("/register", response_model=User, status_code=status.HTTP_201_CREATED)
 async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
+    """AI is creating summary for register_user
+
+    Args:
+        user_data (UserCreate): [description]
+        db (Session, optional): [description]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [description]
+        HTTPException: [description]
+
+    Returns:
+        [type]: [description]
+    """
     user_service = UserService(db)
 
     email_user = await user_service.get_user_by_email(user_data.email)
@@ -36,6 +49,18 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
 async def login_user(
     form_data: UserLogin, db: Session = Depends(get_db)
 ):
+    """AI is creating summary for login_user
+
+    Args:
+        form_data (UserLogin): [description]
+        db (Session, optional): [description]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [description]
+
+    Returns:
+        [type]: [description]
+    """
     user_service = UserService(db)
     user = await user_service.get_user_by_email(form_data.email)
     print(user)

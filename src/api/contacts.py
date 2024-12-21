@@ -12,15 +12,28 @@ from src.schemas import ContactCreate, ContactResponse, User, ContactFullRespons
 from src.database.db import get_db
 
 # Create router
-router = APIRouter()
+router = APIRouter(prefix="/contacts")
 
 
-@router.post("/", response_model=ContactResponse)
+@router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)
 async def create_contact(
     contact: ContactCreate,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """AI is creating summary for create_contact
+
+    Args:
+        contact (ContactCreate): [description]
+        db (AsyncSession, optional): [description]. Defaults to Depends(get_db).
+        current_user (User, optional): [description]. Defaults to Depends(get_current_user).
+
+    Raises:
+        HTTPException: [description]
+
+    Returns:
+        [type]: [description]
+    """
     print(contact)
     print(current_user)
     contact_id = await create_new_contact(db, contact, current_user)
@@ -37,6 +50,17 @@ async def get_contacts(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """AI is creating summary for get_contacts
+
+    Args:
+        skip (int, optional): [description]. Defaults to 0.
+        limit (int, optional): [description]. Defaults to 100.
+        db (AsyncSession, optional): [description]. Defaults to Depends(get_db).
+        current_user (User, optional): [description]. Defaults to Depends(get_current_user).
+
+    Returns:
+        [type]: [description]
+    """
     contacts = await get_all_contacts(db, skip, limit, current_user)
     return contacts
 
@@ -46,6 +70,19 @@ async def get_contact(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """AI is creating summary for get_contact
+
+    Args:
+        contact_id (int): [description]
+        db (AsyncSession, optional): [description]. Defaults to Depends(get_db).
+        current_user (User, optional): [description]. Defaults to Depends(get_current_user).
+
+    Raises:
+        HTTPException: [description]
+
+    Returns:
+        [type]: [description]
+    """
     contact = await get_existing_contact(db, contact_id, current_user)
     if not contact:
         raise HTTPException(detail="Contact not found or not accessible by this user.",
@@ -66,6 +103,20 @@ async def update_contact(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """AI is creating summary for update_contact
+
+    Args:
+        contact_id (int): [description]
+        contact (ContactCreate): [description]
+        db (AsyncSession, optional): [description]. Defaults to Depends(get_db).
+        current_user (User, optional): [description]. Defaults to Depends(get_current_user).
+
+    Raises:
+        HTTPException: [description]
+
+    Returns:
+        [type]: [description]
+    """
     result = await update_existing_contact(db, contact_id, contact, current_user)
     if result == None:
         raise HTTPException(detail="Contact not found or not accessible by this user.", 
@@ -78,6 +129,19 @@ async def delete_contact(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """AI is creating summary for delete_contact
+
+    Args:
+        contact_id (int): [description]
+        db (AsyncSession, optional): [description]. Defaults to Depends(get_db).
+        current_user (User, optional): [description]. Defaults to Depends(get_current_user).
+
+    Raises:
+        HTTPException: [description]
+
+    Returns:
+        [type]: [description]
+    """
     result = await delete_existing_contact(db, contact_id, current_user)
     if result == None:
         raise HTTPException(detail="Contact not found or not accessible by this user.",

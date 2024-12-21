@@ -3,9 +3,19 @@ ForeignKey
 from sqlalchemy.orm import relationship, DeclarativeBase
 
 class Base(DeclarativeBase):
+    """AI is creating summary for Base
+
+    Args:
+        DeclarativeBase ([type]): [description]
+    """
     pass
 
 class Contact(Base):
+    """AI is creating summary for Contact
+
+    Args:
+        Base ([type]): [description]
+    """
     __tablename__ = "contacts"
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(100), index=True)
@@ -20,6 +30,11 @@ class Contact(Base):
     user = relationship("User", backref="contacts")
 
 class User(Base):
+    """AI is creating summary for User
+
+    Args:
+        Base ([type]): [description]
+    """
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
